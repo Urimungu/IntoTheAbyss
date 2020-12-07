@@ -33,6 +33,10 @@ public class CharacterFunctions : CharacterStats
         get => _canInteract;
         set => _canInteract = value;
     }
+    public bool CanOpenInventory {
+        get => _canOpenInventory;
+        set => _canOpenInventory = value;
+    }
 
     //Dynamic Variables
     public float MovementSpeed
@@ -108,9 +112,29 @@ public class CharacterFunctions : CharacterStats
     }
 
     //Inventory
+    protected bool isInventoryOpen;
     public List<Item> Inventory {
         get => _inventory;
         set => _inventory = value;
+    }
+    protected void OpenInventory() {
+
+        //There is no inventory
+        if (!PlayerUIExists) return;
+
+        //Toggles back and forth wether to open the inventory or not
+        isInventoryOpen = !isInventoryOpen;
+        CanLook = !isInventoryOpen;
+        CanInteract = !isInventoryOpen;
+
+        //Opesn the inventory and frees the mouse
+        if (isInventoryOpen){
+            GameManager.Manager.PlayerUI.OpenInventory(Inventory);
+            return;
+        }
+
+        //Locks the player back into FPS mode
+        GameManager.Manager.PlayerUI.HideInventory();
     }
 
     //Additional Functions

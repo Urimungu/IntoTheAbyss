@@ -9,6 +9,11 @@ public class PlayerController : CharacterFunctions{
         if (CanMove) MovePlayer();
         if (CanLook) CameraMovement();
         if (CanInteract) Interaction();
+
+        //Buttons Presses
+        if (CanOpenInventory && Input.GetKeyDown(KeyCode.Tab)) {
+            OpenInventory();
+        }
     }
 
     //Moves the player

@@ -8,6 +8,7 @@ public class CharacterStats : MonoBehaviour {
     [SerializeField] protected bool _canMove;
     [SerializeField] protected bool _canLook;
     [SerializeField] protected bool _canInteract;
+    [SerializeField] protected bool _canOpenInventory;
 
     [Header("Dynamic Variables")]
     [SerializeField] protected float _movementSpeed;
