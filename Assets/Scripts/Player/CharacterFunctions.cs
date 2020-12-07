@@ -34,7 +34,7 @@ public class CharacterFunctions : CharacterStats
         set => _canInteract = value;
     }
 
-    //Dynamic Varaibles
+    //Dynamic Variables
     public float MovementSpeed
     {
         get => _movementSpeed;
@@ -53,6 +53,25 @@ public class CharacterFunctions : CharacterStats
     public LayerMask InteractionLayerMask {
         get => _interactionLayerMask;
         set => _interactionLayerMask = value;
+    }
+    public GameObject HoveringOnObject {
+        get => _hoveringOnObject;
+        set {
+            //Makes sure the function doesn't run more than once per hover
+            if (_hoveringOnObject == value) return;
+
+            //Sets objects to match
+            _hoveringOnObject = value;
+
+            //Starts Hovering
+            if (value != null) {
+                OnStartHover(value);
+                return;
+            }
+
+            //Ends Hovering
+            OnEndHover();
+        }
     }
 
     //Movement
@@ -80,6 +99,14 @@ public class CharacterFunctions : CharacterStats
         get => _playerCamera != null ? _playerCamera : _playerCamera = transform.Find("Camera").gameObject;
     }
 
+    //Reference Check
+    protected bool GameManagerExists {
+        get => GameManager.Manager != null;
+    }
+    protected bool PlayerUIExists {
+        get => GameManagerExists && GameManager.Manager.PlayerUI != null;
+    }
+
     //Inventory
     public List<Item> Inventory {
         get => _inventory;
@@ -93,18 +120,52 @@ public class CharacterFunctions : CharacterStats
         bool hitObject = Physics.SphereCast(ray, InteractionRadius, out RaycastHit hit, InteractionDistance, InteractionLayerMask);
 
         //Exits if nothing was hit
-        if (!hitObject) return null;
+        if (!hitObject) {
+            HoveringOnObject = null;
+            return null;
+        }
 
         //Makes sure there is an object
         if (hit.collider != null) {
             if (hit.collider.GetComponent<Interactable>() != null) {
+                HoveringOnObject = hit.collider.gameObject;
                 return hit.collider.gameObject;
             }
         }
 
+        HoveringOnObject = null;
         return null;
     }
     public void PickUpitem(Item item) {
+        //Adds the item to the inventory
         Inventory.Add(item);
+
+        //Sends message to the private terminal
+        MessageTerminal("<Color=#ff0000>" + item.Name + "</color> was added to inventory.");
+
+        //Clears the hovering on text
+        HoveringOnObject = null;
+    }
+    public void OnStartHover(GameObject obj) {
+        //Exits if the player UI is not set up as a reference
+        if (!PlayerUIExists) return;
+
+        //Sets the name in the indicator
+        GameManager.Manager.PlayerUI.UpdateCrossHairText(obj.name);
+
+    }
+    public void OnEndHover() {
+        //Exits if the player UI is not set up as a reference
+        if (!PlayerUIExists) return;
+
+        //Hides the indicator
+        GameManager.Manager.PlayerUI.HideCrossHairText();
+    }
+    protected void MessageTerminal(string message) {
+        //Exits if there is no game Manager
+        if (!GameManagerExists) return;
+
+        GameManager.Manager.TerminalMessage(message);
+
     }
 }

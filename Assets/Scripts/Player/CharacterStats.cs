@@ -16,6 +16,7 @@ public class CharacterStats : MonoBehaviour {
     [SerializeField] protected float _interactionDistance;
     [SerializeField] protected float _interactionRadius;
     [SerializeField] protected LayerMask _interactionLayerMask;
+    [SerializeField] protected GameObject _hoveringOnObject;
 
     [Header("Movement")]
     [SerializeField] protected float _walkingSpeed;

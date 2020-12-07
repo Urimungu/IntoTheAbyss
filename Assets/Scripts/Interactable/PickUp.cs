@@ -9,6 +9,7 @@ public class PickUp : Interactable{
     //Initializes the Delegation
     private void Start(){
         Interaction = PickUpItem;
+        gameObject.name = self.Name;
     }
 
     //Picks up the item and adds it into the inventory of the player
