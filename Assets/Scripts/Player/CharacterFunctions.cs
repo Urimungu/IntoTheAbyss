@@ -161,7 +161,16 @@ public class CharacterFunctions : CharacterStats
         return null;
     }
     public void PickUpitem(Item item) {
-        //Adds the item to the inventory
+        //Makes sure the player doesn't already have an item of that type
+        for (int i = 0; i < Inventory.Count; i++) {
+            if (Inventory[i].ID == item.ID && Inventory[i].Quantity < Inventory[i].MaxHoldCount) {
+                Inventory[i].Quantity++;
+                MessageTerminal("<Color=#ff0000>" + item.Name + "</color> was added to inventory.");
+                return;
+            }
+        }
+
+        //Adds the tiem to the inventory
         Inventory.Add(item);
 
         //Sends message to the private terminal

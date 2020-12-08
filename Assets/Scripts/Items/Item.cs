@@ -8,13 +8,18 @@ public class Item{
     public string Desc;
     public int ID;
     public int Quantity;
+    public int MaxHoldCount;
 
-    //First Initialization
-    public Item(string name, string desc, int id, int quantity) {
+    [Header("Physical Stats")]
+    public float Weight;
+
+    //First Initialization with general stats
+    public Item(string name, string desc, int id, int quantity, int maxCount) {
         Name = name;
         Desc = desc;
         ID = id;
         Quantity = quantity;
+        MaxHoldCount = maxCount;
     }
 
 }

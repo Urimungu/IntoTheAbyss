@@ -14,5 +14,7 @@ public class PlayerUIStats : MonoBehaviour {
     [SerializeField] protected List<GameObject> _inventorySlots = new List<GameObject>();
     [SerializeField] protected Transform _inventoryHolder;
     [SerializeField] protected Transform _itemHolder;
+    [SerializeField] protected Text _carryWeight;
+    [SerializeField] protected GameObject _optionsMenu;
 
 }
