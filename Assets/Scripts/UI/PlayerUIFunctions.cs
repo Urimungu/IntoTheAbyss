@@ -11,6 +11,8 @@ public class PlayerUIFunctions : PlayerUIStats{
         InitializeInventory();
         HideInventory();
         CloseOptions();
+        InitializeStorage();
+        HideStorage();
 
         //Checks to make sure there is a game manager and sets itself inside of it
         if (GameManager.Manager == null) return;
@@ -54,6 +56,22 @@ public class PlayerUIFunctions : PlayerUIStats{
         get => _optionsMenu != null ? _optionsMenu : _optionsMenu = transform.Find("Inventory/Options").gameObject;
     }
 
+    //Storage
+    public Text StorageName {
+        get => _storageName != null ? _storageName : _storageName = transform.Find("StorageUI/Text").GetComponent<Text>();
+    }
+    public GameObject StorageUI {
+        get => _storageUI != null ? _storageUI : _storageUI = transform.Find("StorageUI").gameObject;
+    }
+    public Transform StoredItemHolder {
+        get => _storedItemHolder != null ? _storedItemHolder : _storedItemHolder = transform.Find("StorageUI/Items");
+    }
+    public List<GameObject> StoredItemSlots{
+        get => _storedItemSlots;
+        set => _storedItemSlots = value;
+
+    }
+
     //Functions
     public void UpdateCrossHairText(string text) {
         //Shows the indicator if it was set to off
@@ -73,33 +91,41 @@ public class PlayerUIFunctions : PlayerUIStats{
     //Variables
     float weightCarrying = 0;
     int clicked = 404;
+    bool checkInv = true;
 
     //Inventory Functions
     public void HideInventory(){
         InventoryHolder.gameObject.SetActive(false);
         CloseOptions();
     }
-    public void OpenInventory(List<Item> newInventory)
-    {
+    public void OpenInventory(List<Item> newInventory){
         UpdateInventory(newInventory);
         InventoryHolder.gameObject.SetActive(true);
     }
-    public void ClickItem(int id){
+    public void ClickItem(int id, bool inv = true){
         //Closes the options if the same button is pressed twice
-        if (id != clicked){
-            clicked = id;
-            OpenOptions(id);
-        }
-        else
-        {
+        if (id == clicked && inv == checkInv){
             clicked = 404;
+            checkInv = inv;
             CloseOptions();
+            return;
         }
+
+        //Opens the options on the right UI surface
+        clicked = id;
+        checkInv = inv;
+        OpenOptions(id, inv);
+        return;
+
     }
-    private void OpenOptions(int id) {
+    private void OpenOptions(int id, bool inv = true) {
         //Sets the position before opening
         var newPos = InventorySlots[id].GetComponent<RectTransform>().anchoredPosition;
-        OptionsMenu.GetComponent<RectTransform>().anchoredPosition = new Vector2(newPos.x + 80, newPos.y - 200);
+
+        OptionsMenu.transform.parent = inv ? InventoryHolder.transform : StorageUI.transform;
+        var offset = inv ? new Vector2(80, -200) : new Vector2(90, -100);
+
+        OptionsMenu.GetComponent<RectTransform>().anchoredPosition = new Vector2(newPos.x + offset.x, newPos.y + offset.y);
 
         //Shows the options menu
         OptionsMenu.SetActive(true);
@@ -165,5 +191,53 @@ public class PlayerUIFunctions : PlayerUIStats{
 
         //Returns the blank one if the icon doesn't exist
         return Resources.Load<Sprite>("UI/Inventory/Icons/_NotFound");
+    }
+
+    //Storage Functions
+    private void InitializeStorage() {
+        //Initializes variables
+        var slot = Resources.Load<GameObject>("UI/Inventory/Prefabs/Slot");
+
+        //Creates the inventory slots
+        for (int y = 0; y < 5; y++){
+            //Places the slots
+            for (int x = 0; x < 3; x++){
+                var obj = Instantiate(slot, StoredItemHolder);
+                obj.GetComponent<RectTransform>().anchoredPosition = new Vector2(10 + (110 * x), -10 - (110 * y));
+                StoredItemSlots.Add(obj);
+            }
+        }
+    }
+    public void OpenStorage(ref List<Item> containedItems, string name){
+        StorageUI.SetActive(true);
+        StorageName.text = name;
+
+        for (int i = 0; i < StoredItemSlots.Count; i++){
+            //Updates the slots 
+            if (containedItems.Count > i){
+                //Turns on the button and sets the reference
+                StoredItemSlots[i].GetComponent<Button>().interactable = true;
+                StoredItemSlots[i].GetComponent<Button>().onClick.RemoveAllListeners();
+                int num = i;
+                StoredItemSlots[i].GetComponent<Button>().onClick.AddListener(delegate { ClickItem(num, false); });
+
+                //Fixes image
+                StoredItemSlots[i].transform.Find("Icon").GetComponent<Image>().enabled = true;
+                StoredItemSlots[i].transform.Find("Icon").GetComponent<Image>().sprite = FindImage(containedItems[i].Name);
+
+                //Fixes Quantity
+                StoredItemSlots[i].transform.Find("Quantity").GetComponent<Text>().text = containedItems[i].Quantity.ToString();
+
+                continue;
+            }
+
+            //Creates an empty slot
+            StoredItemSlots[i].transform.Find("Icon").GetComponent<Image>().enabled = false;
+            StoredItemSlots[i].transform.Find("Quantity").GetComponent<Text>().text = "";
+            StoredItemSlots[i].GetComponent<Button>().interactable = false;
+        }
+    }
+    public void HideStorage() {
+        StorageUI.SetActive(false);
     }
 }

@@ -17,4 +17,10 @@ public class PlayerUIStats : MonoBehaviour {
     [SerializeField] protected Text _carryWeight;
     [SerializeField] protected GameObject _optionsMenu;
 
+    [Header("Storage")]
+    [SerializeField] protected Text _storageName;
+    [SerializeField] protected GameObject _storageUI;
+    [SerializeField] protected Transform _storedItemHolder;
+    [SerializeField] protected List<GameObject> _storedItemSlots = new List<GameObject>();
+
 }

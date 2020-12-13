@@ -117,6 +117,14 @@ public class CharacterFunctions : CharacterStats
         get => _inventory;
         set => _inventory = value;
     }
+    public void OpenContainer(ref List<Item> containedItems, string name) {
+        //There is no player UI in the scene
+        if (!PlayerUIExists) return;
+
+        OpenInventory();
+        GameManager.Manager.PlayerUI.OpenStorage(ref containedItems, name);
+        CanMove = false;
+    }
     protected void OpenInventory() {
 
         //There is no inventory
@@ -127,7 +135,7 @@ public class CharacterFunctions : CharacterStats
         CanLook = !isInventoryOpen;
         CanInteract = !isInventoryOpen;
 
-        //Opesn the inventory and frees the mouse
+        //Opens the inventory and frees the mouse
         if (isInventoryOpen){
             GameManager.Manager.PlayerUI.OpenInventory(Inventory);
             return;
@@ -135,6 +143,8 @@ public class CharacterFunctions : CharacterStats
 
         //Locks the player back into FPS mode
         GameManager.Manager.PlayerUI.HideInventory();
+        GameManager.Manager.PlayerUI.HideStorage();
+        CanMove = true;
     }
 
     //Additional Functions
