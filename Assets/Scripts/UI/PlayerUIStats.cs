@@ -16,6 +16,7 @@ public class PlayerUIStats : MonoBehaviour {
     [SerializeField] protected Transform _itemHolder;
     [SerializeField] protected Text _carryWeight;
     [SerializeField] protected GameObject _optionsMenu;
+    [SerializeField] protected GameObject _mouseIcon;
 
     [Header("Storage")]
     [SerializeField] protected Text _storageName;

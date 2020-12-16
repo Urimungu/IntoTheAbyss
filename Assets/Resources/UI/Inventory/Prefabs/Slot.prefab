@@ -86,6 +86,7 @@ GameObject:
   - component: {fileID: 1840889840766903543}
   - component: {fileID: 1840889840766903540}
   - component: {fileID: 3632746758071166821}
+  - component: {fileID: 1997290085450668467}
   m_Layer: 5
   m_Name: Slot
   m_TagString: Untagged
@@ -193,6 +194,20 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
+--- !u!114 &1997290085450668467
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1840889840766903434}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1862395651, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates: []
+  delegates: []
 --- !u!1 &1840889842419549466
 GameObject:
   m_ObjectHideFlags: 0

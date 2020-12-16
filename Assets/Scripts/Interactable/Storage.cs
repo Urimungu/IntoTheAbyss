@@ -11,11 +11,17 @@ public class Storage : Interactable{
 
     //Sets it's own delegation
     private void Start(){
+        //Sets delegation
         Interaction = OpenContainer;
 
         //Sets the name
         StorageName = gameObject.name;
 
+        //Fills in empty items
+        for (int i = ContainedItems.Count; i < 15; i++)
+            ContainedItems.Add(new Item());
+
+        //Changes name to see if it's locked or not
         if (Locked)
             gameObject.name = StorageName + " [Locked]";
         else 

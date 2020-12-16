@@ -22,4 +22,7 @@ public class Item{
         MaxHoldCount = maxCount;
     }
 
+    //Creates empty Item
+    public Item() { 
+    }
 }
